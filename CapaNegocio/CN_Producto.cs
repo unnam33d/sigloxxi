@@ -34,7 +34,7 @@ namespace CapaNegocio
 
             else if(obj.oIngrediente.IdIngrediente == 0)
             {
-                Mensaje = "Ingresa al menos un ingrediente al producto";
+                Mensaje = "Ingresa un ingrediente al producto";
             }
 
             else if(obj.oCategoria.IdCategoria == 0)

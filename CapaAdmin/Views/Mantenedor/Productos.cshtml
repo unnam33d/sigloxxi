@@ -66,7 +66,7 @@
 
                     <div class="col-sm-3">
                         <div class="mb-3">
-                            <label class="form-label">Nombre</label>
+                            <label class="form-label">Nombre Producto</label>
                             <input type="text" class="form-control" id="txtnombre" name="nombreproducto" autocomplete="off" />
                         </div>
 
@@ -84,27 +84,14 @@
 
 
                         <div class="mb-3">
-                            <label class="form-label">Ingrediente 1</label>
-                            <select id="cmbIngrediente1" class="form-select"></select>
+                            <label class="form-label">Ingrediente</label>
+                            <select id="cmbIngrediente" class="form-select"></select>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Ingrediente 2</label>
-                            <select id="cmbIngrediente2" class="form-select"></select>
+                            <label class="form-label">Categoria</label>
+                            <select id="cmbCategoria" class="form-select"></select>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Ingrediente 3</label>
-                            <select id="cmbIngrediente3" class="form-select"></select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Ingrediente 4</label>
-                            <select id="cmbIngrediente4" class="form-select"></select>
-                        </div>                        
-                    </div>
-
-                    <div class="col-sm-3">
 
                         <div class="mb-3">
                             <label class="form-label">Precio</label>
@@ -119,11 +106,8 @@
                             </select>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Categoria</label>
-                            <select id="cmbCategoria" class="form-select"></select>
-                        </div>
-                    </div>
+
+                    </div>                        
 
                 </form>
 
@@ -172,57 +156,35 @@
             responsive: true,
             ordering: false,
             "ajax": {
-                url: '@Url.Action("ListarIngredientes", "Mantenedor")',
+                url: '@Url.Action("ListarProducto", "Mantenedor")',
                 type: "GET",
                 dataType: "json"
             },
-            "columns": [
+            //"columns": [
 
-                { "data": "Descripcion" },
-                {
-                    "data": "Activo", "render": function (valor) {
-                        if (valor) {
-                            return '<span class="badge bg-success">Si</span>'
-                        } {
-                            return '<span class="badge bg-danger">No</span>'
-                        }
-                    }
-                },
-                {
-                    "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
-                        '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>',
-                    "orderable": false,
-                    "searchable": false,
-                    "width": "70px"
-                }
-            ],
+            //    { "data": "Receta" },
+            //    {
+            //        "data": "Activo", "render": function (valor) {
+            //            if (valor) {
+            //                return '<span class="badge bg-success">Si</span>'
+            //            } {
+            //                return '<span class="badge bg-danger">No</span>'
+            //            }
+            //        }
+            //    },
+            //    {
+            //        "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
+            //            '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>',
+            //        "orderable": false,
+            //        "searchable": false,
+            //        "width": "70px"
+            //    }
+            //],
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
             }
 
         });
-        
-
-        @*jQuery.ajax({
-    url: '@Url.Action("ListarIngredientes", "Mantenedor")',
-    type: "GET",
-    data: null,
-    dataType: "json",
-    contentType: "application/json; charset=utf-8",
-    success: function (data) {
-        console.log(data);
-        $("<option>").attr({ "value": "0", "disabled": "true", "selected": "true" }).text("Seleccionar Ingrediente").appendTo("#chxIngredientes");
-        $.each(data.data, function (index, item) {
-            $("<option>").attr({ "value": item.IdIngrediente }).text(item.Descripcion).appendTo("#chxIngredientes");
-        });
-    },
-    error: function (error) {
-        console.log(error);
-    },
-    beforeSend: function () {
-        tablaData.ajax.reload();
-    },
-});*@
 
 
         jQuery.ajax({
@@ -233,9 +195,9 @@
     contentType: "application/json; charset=utf-8",
     success: function (data) {
         console.log(data);
-        $("<option>").attr({ "value": "0", "disabled": "true", "selected": "true" }).text("Seleccionar Ingrediente").appendTo("#cmbIngrediente1");
+        $("<option>").attr({ "value": "0", "disabled": "true", "selected": "true" }).text("Seleccionar Ingrediente").appendTo("#cmbIngrediente");
         $.each(data.data, function (index, item) {
-            $("<option>").attr({ "value": item.IdIngrediente }).text(item.Descripcion).appendTo("#cmbIngrediente1");
+            $("<option>").attr({ "value": item.IdIngrediente }).text(item.Descripcion).appendTo("#cmbIngrediente");
         });
     },
     error: function (error) {
@@ -245,71 +207,6 @@
         tablaData.ajax.reload();
     },
         });
-
-        jQuery.ajax({
-    url: '@Url.Action("ListarIngredientes", "Mantenedor")',
-    type: "GET",
-    data: null,
-    dataType: "json",
-    contentType: "application/json; charset=utf-8",
-    success: function (data) {
-        console.log(data);
-        $("<option>").attr({ "value": "0", "disabled": "true", "selected": "true" }).text("Seleccionar Ingrediente").appendTo("#cmbIngrediente4");
-        $.each(data.data, function (index, item) {
-            $("<option>").attr({ "value": item.IdIngrediente }).text(item.Descripcion).appendTo("#cmbIngrediente4");
-        });
-    },
-    error: function (error) {
-        console.log(error);
-    },
-    beforeSend: function () {
-        tablaData.ajax.reload();
-    },
-        });
-
-        jQuery.ajax({
-    url: '@Url.Action("ListarIngredientes", "Mantenedor")',
-    type: "GET",
-    data: null,
-    dataType: "json",
-    contentType: "application/json; charset=utf-8",
-    success: function (data) {
-        console.log(data);
-        $("<option>").attr({ "value": "0", "disabled": "true", "selected": "true" }).text("Seleccionar Ingrediente").appendTo("#cmbIngrediente2");
-        $.each(data.data, function (index, item) {
-            $("<option>").attr({ "value": item.IdIngrediente }).text(item.Descripcion).appendTo("#cmbIngrediente2");
-        });
-    },
-    error: function (error) {
-        console.log(error);
-    },
-    beforeSend: function () {
-        tablaData.ajax.reload();
-    },
-        });
-
-        jQuery.ajax({
-    url: '@Url.Action("ListarIngredientes", "Mantenedor")',
-    type: "GET",
-    data: null,
-    dataType: "json",
-    contentType: "application/json; charset=utf-8",
-    success: function (data) {
-        console.log(data);
-        $("<option>").attr({ "value": "0", "disabled": "true", "selected": "true" }).text("Seleccionar Ingrediente").appendTo("#cmbIngrediente3");
-        $.each(data.data, function (index, item) {
-            $("<option>").attr({ "value": item.IdIngrediente }).text(item.Descripcion).appendTo("#cmbIngrediente3");
-        });
-    },
-    error: function (error) {
-        console.log(error);
-    },
-    beforeSend: function () {
-        tablaData.ajax.reload();
-    },
-});
-
-
 
         
         jQuery.ajax({
@@ -342,10 +239,7 @@
                 $("#txtid").val(json.IdIngrediente);
                 $("#txtnombre").val(json.NombreProducto);
                 $("#txtreceta").val(json.Receta);
-                $("#cmbIngrediente1").val(json.oIngrediente.IdIngrediente);
-                $("#cmbIngrediente2").val(json.oIngrediente.IdIngrediente);
-                $("#cmbIngrediente3").val(json.oIngrediente.IdIngrediente);
-                $("#cmbIngrediente4").val(json.oIngrediente.IdIngrediente);
+                $("#cmbIngrediente").val(json.oIngrediente.IdIngrediente);
                 $("#cmbCategoria").val(json.oCategoria.IdCategoria);
                 $("#txtprecio").val(json.Precio);
                 $("#cmbActivo").val(json.Activo == true ? 1 : 0);
@@ -361,10 +255,7 @@
                 $("#fileProducto").val("");
                 $("#txtnombre").val("");
                 $("#txtreceta").val("");
-                $("#cmbIngrediente1").val("0");
-                $("#cmbIngrediente2").val("0");
-                $("#cmbIngrediente3").val("0");
-                $("#cmbIngrediente4").val("0");
+                $("#cmbIngrediente").val("0");
                 $("#cmbCategoria").val("0");
                 $("#txtprecio").val("");
                 $("#cmbActivo").val(1);
@@ -447,20 +338,8 @@
                 NombreProducto: $("#txtnombre").val(),
                 Receta: $("#txtReceta").val(),
                 oIngrediente: {
-                    IdIngrediente : $("#cmbIngrediente1 option:selected").val(),
-                    Descripcion: $("#cmbIngrediente1 option:selected").text()
-                },
-                oIngrediente1: {
-                    IdIngrediente: $("#cmbIngrediente2 option:selected").val(),
-                    Descripcion: $("#cmbIngrediente2 option:selected").text()
-                },
-                oIngrediente2: {
-                    IdIngrediente: $("#cmbIngrediente3 option:selected").val(),
-                    Descripcion: $("#cmbIngrediente3 option:selected").text()
-                },
-                oIngrediente3: {
-                    IdIngrediente: $("#cmbIngrediente4 option:selected").val(),
-                    Descripcion: $("#cmbIngrediente4 option:selected").text()
+                    IdIngrediente : $("#cmbIngrediente option:selected").val(),
+                    Descripcion: $("#cmbIngrediente option:selected").text()
                 },
                 oCategoria: {
                     IdCategoria: $("#cmbCategoria option:selected").val(),
@@ -525,113 +404,7 @@
                     });
                 }
             })
-
-
-
-
-
         }
-
-
-
-        @*function Guardar() {
-
-
-            var ImagenSeleccionada = $("#fileProducto")[0].files[0];
-            var ingredientesSeleccionados = $("#chxIngredientes").val(); // Obtener los valores seleccionados como un array
-            var ingredientesDescripcion = []; // Array para almacenar las descripciones de los ingredientes seleccionados
-            // Recorrer los valores seleccionados y obtener las descripciones correspondientes
-            $.each(ingredientesSeleccionados, function (index, value) {
-                ingredientesDescripcion.push($("#chxIngredientes option[value='" + value + "']").text());
-            });
-
-            var Producto = {
-                IdProducto: $("#txtid").val(),
-                NombreProducto: $("#txtnombre").val(),
-                Receta: $("#txtReceta").val(),
-                oIngrediente: {
-                    //IdIngrediente: $("#chxIngredientes option:selected").val(),
-                    
-                    IdIngredientes: ingredientesSeleccionados,
-                    Descripcion: ingredientesDescripcion
-                    //Descripcion: $("#chxIngredientes option:selected").text()
-                },
-                oCategoria: {
-                    IdCategoria: $("#cmbCategoria option:selected").val(),
-                    Descripcion: $("#cmbCategoria option:selected").text()
-                },
-                Precio: $("#txtprecio").val(),
-                Activo: $("#cmbActivo").val() == 1 ? true : false
-                
-            }
-
-            var request = new FormData();
-            request.append("objeto", JSON.stringify(Producto));
-            request.append("archivoImagen", ImagenSeleccionada);
-
-
-            
-            jQuery.ajax({
-                url: '@Url.Action("GuardarProducto", "Mantenedor")',
-                type: "POST",
-                data: request,
-                processData: false,
-                contentType: false,
-                success: function (data) {
-
-                    $(".modal-body").LoadingOverlay("hide");
-
-                 //Producto nuevO
-                    if (Producto.IdProducto == 0) {
-
-                        if (data.idGenerado != 0) {
-                            Producto.IdProducto = data.idGenerado;
-                            tablaData.row.add(Producto).draw(false);
-                            $("#formModal").modal("hide");
-                        } else {
-                            $("#mensajeError").text(data.mensaje);
-                            $("#mensajeError").show();
-
-                        }
-                    }
-                    //editar Producto
-                    else {
-
-                        if (data.operacionExitosa) {
-                            tablaData.row(filaSeleccionada).data(Producto).draw(false);
-                            filaSeleccionada = null;
-                            $("#formModal").modal("hide");
-                        } else {
-                            $("#mensajeError").text(data.mensaje);
-                            $("#mensajeError").show();
-                        }
-                    }
-                },
-                error: function (error) {
-
-                    $(".modal-body").LoadingOverlay("hide");
-
-                    $("#mensajeError").text("ERROR AJAX");
-                    $("#mensajeError").show();
-                },
-                beforeSend: function () {
-                    $(".modal-body").LoadingOverlay("show", {
-                        imageResizeFactor: 2,
-                        text: "Cargando...",
-                        size: 14
-                    });
-                }
-            })
-
-
-
-
-
-        }*@
-
-
-
-
     </script>
 }
 

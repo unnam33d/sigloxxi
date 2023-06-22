@@ -20,9 +20,6 @@ namespace CapaEntidad
         public string Base64 { get; set; }
         public string Extension { get; set; }
         public Ingredientes oIngrediente { get; set; }
-        public Ingredientes oIngrediente1 { get; set; }
-        public Ingredientes oIngrediente2 { get; set; }
-        public Ingredientes oIngrediente3 { get; set; }
         public DateTime FechaRegistro { get; set; }
         public Categoria oCategoria { get; set; }
     }
