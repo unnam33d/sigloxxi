@@ -160,26 +160,26 @@
                 type: "GET",
                 dataType: "json"
             },
-            //"columns": [
+            "columns": [
 
-            //    { "data": "Receta" },
-            //    {
-            //        "data": "Activo", "render": function (valor) {
-            //            if (valor) {
-            //                return '<span class="badge bg-success">Si</span>'
-            //            } {
-            //                return '<span class="badge bg-danger">No</span>'
-            //            }
-            //        }
-            //    },
-            //    {
-            //        "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
-            //            '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>',
-            //        "orderable": false,
-            //        "searchable": false,
-            //        "width": "70px"
-            //    }
-            //],
+                { "data": "Receta" },
+                {
+                    "data": "Activo", "render": function (valor) {
+                        if (valor) {
+                            return '<span class="badge bg-success">Si</span>'
+                        } {
+                            return '<span class="badge bg-danger">No</span>'
+                        }
+                    }
+                },
+                {
+                    "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
+                        '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>',
+                    "orderable": false,
+                    "searchable": false,
+                    "width": "70px"
+                }
+            ],
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
             }
