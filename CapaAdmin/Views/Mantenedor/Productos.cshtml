@@ -6,7 +6,7 @@
 <h2>Productos</h2>
 <ol class="breadcrumb mb-4 mt-4">
     <li class="breadcrumb-item"><a href="index.html">Mantenimiento</a></li>
-    <li class="breadcrumb-item active">Productos</li>
+    <li class="breadcrumb-item active">Producto</li>
 </ol>
 
 <div class="card">
@@ -30,7 +30,7 @@
             <tr>
                 <th>Nombre</th>
                 <th>Receta</th>
-                <th>Ingredientes</th>
+                <th>Ingrediente</th>
                 <th>Categoria</th>
                 <th>Precio</th>
                 <th>Activo</th>
@@ -75,8 +75,6 @@
                             <label class="form-label">Receta</label>
                             <textarea type="text" class="form-control" id="txtreceta" name="receta" style="height:125px;resize:none" autocomplete="off"></textarea>
                         </div>
-
-
                     </div>
 
 
@@ -97,7 +95,10 @@
                             <label class="form-label">Precio</label>
                             <input type="text" class="form-control" id="txtprecio" name="precio" autocomplete="off" />
                         </div>
+                    </div>
 
+                    <div class="col-sm-3">
+                        
                         <div class="mb-3">
                             <label for="cmbActivo" class="form-label">Activo</label>
                             <select id="cmbActivo" class="form-select">
@@ -105,9 +106,7 @@
                                 <option value="0">No</option>
                             </select>
                         </div>
-
-
-                    </div>                        
+                    </div>
 
                 </form>
 
@@ -137,8 +136,7 @@
 
         var tablaData;
         var filaSeleccionada;
-        var ingredienteSeleccionado;
-               
+
         function mostrarImagen(input) {
             if (input.files) {
                 var reader = new FileReader();
@@ -156,13 +154,29 @@
             responsive: true,
             ordering: false,
             "ajax": {
-                url: '@Url.Action("ListarProducto", "Mantenedor")',
+                url: '@Url.Action("ListarProductos", "Mantenedor")',
                 type: "GET",
                 dataType: "json"
             },
             "columns": [
 
+                { "data": "NombreProducto" },
                 { "data": "Receta" },
+
+                {
+                    "data": "oIngrediente", "render": function (data) {
+                        return data.Descripcion
+                    }
+                },
+
+                {
+                    "data": "oCategoria", "render": function (data) {
+                        return data.Descripcion
+                    }
+                },
+
+                { "data": "Precio" },
+
                 {
                     "data": "Activo", "render": function (valor) {
                         if (valor) {
@@ -171,7 +185,8 @@
                             return '<span class="badge bg-danger">No</span>'
                         }
                     }
-                },
+                }, 
+                
                 {
                     "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
                         '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>',
@@ -196,20 +211,19 @@
     success: function (data) {
         console.log(data);
         $("<option>").attr({ "value": "0", "disabled": "true", "selected": "true" }).text("Seleccionar Ingrediente").appendTo("#cmbIngrediente");
-        $.each(data.data, function (index, item) {
-            $("<option>").attr({ "value": item.IdIngrediente }).text(item.Descripcion).appendTo("#cmbIngrediente");
+        $.each(data.data, function (index, valor) {
+            $("<option>").attr({ "value": valor.IdIngrediente }).text(valor.Descripcion).appendTo("#cmbIngrediente");
         });
     },
     error: function (error) {
         console.log(error);
     },
-    beforeSend: function () {
+    complete: function () {
         tablaData.ajax.reload();
-    },
-        });
+    }
+});
 
-        
-        jQuery.ajax({
+jQuery.ajax({
     url: '@Url.Action("ListarCategorias", "Mantenedor")',
     type: "GET",
     data: null,
@@ -225,10 +239,40 @@
     error: function (error) {
         console.log(error);
     },
-    beforeSend: function () {
+    complete: function () {
         tablaData.ajax.reload();
-    },
-});
+    }
+        });
+
+
+        jQuery.validator.addMthod("preciodecimal", function (values, element) {
+            return this.optional(element) || /^\d{0,4}(\.\d{0,2})?$/i.test(value);
+        }, "El formato correcto del precio es ##.###");
+
+
+
+        $("#contenedor").validate({
+            rules: {
+                nombreproducto: {
+                    required: true
+                },
+                receta: {
+                    required: true
+                },
+                precio: {
+                    required: true,
+                    preciodecimal: true
+                }
+            },
+            messages: {
+                nombreproducto: "- El campo Nombre es obligatorio",
+                receta: "- El campo Receta es obligatorio",
+                precio: { required: "- El campo Precio es obligatorio", preciodecimal }
+            },
+            errorElement: "div",
+            errorLabelContainer: ".alert-danger"
+        })
+
 
 
 
@@ -267,6 +311,7 @@
             $("#formModal").modal("show")
 
         }
+
 
         $("#tabla tbody").on("click", '.btn-editar', function () {
 
@@ -326,32 +371,35 @@
             console.log(data);
         })
 
-
-
         function Guardar() {
 
-
             var ImagenSeleccionada = $("#fileProducto")[0].files[0];
+
+
 
             var Producto = {
                 IdProducto: $("#txtid").val(),
                 NombreProducto: $("#txtnombre").val(),
-                Receta: $("#txtReceta").val(),
+                Receta: $("#txtreceta").val(),
                 oIngrediente: {
-                    IdIngrediente : $("#cmbIngrediente option:selected").val(),
+                    IdIngrediente: $("#cmbIngrediente option:selected").val(),
                     Descripcion: $("#cmbIngrediente option:selected").text()
                 },
                 oCategoria: {
                     IdCategoria: $("#cmbCategoria option:selected").val(),
                     Descripcion: $("#cmbCategoria option:selected").text()
                 },
+                PrecioTexto: $("#txtprecio").val(),
                 Precio: $("#txtprecio").val(),
                 Activo: $("#cmbActivo").val() == 1 ? true : false
             }
 
+
             var request = new FormData();
-            request.append("objeto", JSON.stringify(Producto));
-            request.append("archivoImagen", ImagenSeleccionada);
+            request.append("objeto", JSON.stringify(Producto))
+            request.append("archivoImagen", ImagenSeleccionada)
+
+
 
             jQuery.ajax({
                 url: '@Url.Action("GuardarProducto", "Mantenedor")',
@@ -363,7 +411,7 @@
 
                     $(".modal-body").LoadingOverlay("hide");
 
-                 //Producto nuevO
+                 //nuevo producto
                     if (Producto.IdProducto == 0) {
 
                         if (data.idGenerado != 0) {
@@ -405,6 +453,10 @@
                 }
             })
         }
+
+
+
+
     </script>
 }
 

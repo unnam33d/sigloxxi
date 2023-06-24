@@ -13,86 +13,7 @@ namespace CapaDatos
 {
     public class CD_Producto
     {
-        //public List<Producto> Listar()
-        //{
-        //    List<Producto> lista = new List<Producto>();
-
-        //    try
-        //    {
-        //        using (SqlConnection oconexion = new SqlConnection(Conexion.Cn))
-        //        {
-        //            SqlCommand cmd = new SqlCommand("sp_ListarProductos", oconexion);
-
-        //            cmd.CommandType = CommandType.Text;
-
-        //            oconexion.Open();
-
-        //            using (SqlDataReader dr = cmd.ExecuteReader())
-        //            {
-        //                while (dr.Read())
-        //                {
-        //                    lista.Add(
-        //                        new Producto()
-        //                        {
-        //                            IdProducto = Convert.ToInt32(dr["IdProducto"]),
-        //                            NombreProducto = dr["NombreProducto"].ToString(),
-        //                            Receta = dr["Receta"].ToString(),
-        //                            oIngrediente = new Ingredientes { IdIngrediente = Convert.ToInt32(dr["IngredientesIds"]), Descripcion = dr["NombresIngredientes"].ToString() },
-        //                            oCategoria = new Categoria { IdCategoria = Convert.ToInt32(dr["IdCategoria"]), Descripcion = dr["Categoria"].ToString() },
-        //                            Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-CL")),
-        //                            RutaImagen = dr["RutaImagen"].ToString(),
-        //                            NombreImagen = dr["NombreImagen"].ToString(),
-        //                            Activo = Convert.ToBoolean(dr["Activo"])
-        //                        });
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        lista = new List<Producto>();
-        //        Console.WriteLine(ex);
-        //    }
-        //    return lista;
-        //}
-
-        //public int RegistrarProducto(Producto obj, out string Mensaje)
-        //{
-        //    int idautogenerado = 0;
-        //    Mensaje = string.Empty;
-
-        //    try
-        //    {
-        //        using (SqlConnection oconexion = new SqlConnection(Conexion.Cn))
-        //        {
-        //            SqlCommand cmd = new SqlCommand("sp_RegistrarProducto", oconexion);
-        //            cmd.Parameters.AddWithValue("Nombre", obj.NombreProducto);
-        //            cmd.Parameters.AddWithValue("Receta", obj.Receta);
-        //            cmd.Parameters.AddWithValue("IdCategoria", obj.oCategoria.IdCategoria);
-        //            cmd.Parameters.AddWithValue("Precio", obj.Precio);
-        //            cmd.Parameters.AddWithValue("Activo", obj.Activo);
-        //            cmd.Parameters.AddWithValue("IngredientesIds", obj.oIngrediente.IdIngrediente);
-        //            cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
-        //            cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
-        //            cmd.CommandType = CommandType.StoredProcedure;
-
-        //            oconexion.Open();
-        //            cmd.ExecuteNonQuery();
-
-        //            idautogenerado = Convert.ToInt32(cmd.Parameters["Resultado"].Value);
-        //            Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
-
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        idautogenerado = 0;
-        //        Mensaje = ex.Message;
-        //    }
-        //    return idautogenerado;
-        //}
-
-
+        
         public List<Producto> Listar()
         {
             List<Producto> lista = new List<Producto>();
@@ -106,7 +27,7 @@ namespace CapaDatos
                     sb.AppendLine("SELECT p.IdProducto, p.NombreProducto, p.Receta,");
                     sb.AppendLine("i.IdIngrediente, i.Descripcion AS Ingrediente,");
                     sb.AppendLine("c.IdCategoria, c.Descripcion AS Categoria,");
-                    sb.AppendLine("p.Precio, p.RutaImagen, p.NombreImagen, p.Activo");
+                    sb.AppendLine("p.Precio AS Precio,  p.RutaImagen, p.NombreImagen, p.Activo");
                     sb.AppendLine("FROM producto p");
                     sb.AppendLine("INNER JOIN CATEGORIA c ON c.IdCategoria = p.IdCategoria");
                     sb.AppendLine("INNER JOIN INGREDIENTES i ON i.IdIngrediente = p.IdIngrediente");                    
@@ -127,7 +48,7 @@ namespace CapaDatos
                                 Receta = dr["Receta"].ToString(),
                                 oIngrediente = new Ingredientes() { IdIngrediente = Convert.ToInt32(dr["IdIngrediente"]), Descripcion = dr["Ingrediente"].ToString() },
                                 oCategoria = new Categoria() { IdCategoria = Convert.ToInt32(dr["IdCategoria"]), Descripcion = dr["Categoria"].ToString() },
-                                Precio = Convert.ToDecimal(dr["IdProducto"], new CultureInfo("es-CL")),
+                                Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-CL")),
                                 RutaImagen = dr["RutaImagen"].ToString(),
                                 NombreImagen = dr["NombreImagen"].ToString(),
                                 Activo = Convert.ToBoolean(dr["Activo"])

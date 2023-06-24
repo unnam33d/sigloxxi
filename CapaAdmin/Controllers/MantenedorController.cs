@@ -128,7 +128,7 @@ namespace CapaAdmin.Controllers
         #region PRODUCTO
 
         [HttpGet]
-        public JsonResult ListarProducto()
+        public JsonResult ListarProductos()
         {
             List<Producto> oLista = new List<Producto>();
 
@@ -141,75 +141,53 @@ namespace CapaAdmin.Controllers
         public JsonResult GuardarProducto(string objeto, HttpPostedFileBase archivoImagen)
         {
             string mensaje = string.Empty;
-            bool operacion_existosa = true;
+            bool operacion_exitosa = true;
             bool guardar_imagen_exito = true;
 
             Producto oProducto = new Producto();
-            try
-            {
-                oProducto = JsonConvert.DeserializeObject<Producto>(objeto);
-            }
-            catch (Exception)
-            {
-
-                
-            }                
-                
+            oProducto = JsonConvert.DeserializeObject<Producto>(objeto);
 
             decimal precio;
 
-            if (decimal.TryParse(oProducto.PrecioTexto, System.Globalization.NumberStyles.AllowDecimalPoint, new CultureInfo("es-CL"), out precio))
+            if (decimal.TryParse(oProducto.PrecioTexto, NumberStyles.AllowDecimalPoint, new CultureInfo("es-CL"), out precio))
             {
                 oProducto.Precio = precio;
-
             }
             else
             {
-
-                try
-                {
-                    return Json(new { operacionExitosa = false, mensaje = "El formato del precio debe ser ##.##" }, JsonRequestBehavior.AllowGet);
-                }
-                catch (Exception)
-                {
-
-                    
-                }
-                
+                return Json(new { operacionExitosa = false, mensaje = "El Formato del precio debe ser ##.###" }, JsonRequestBehavior.AllowGet);
             }
-
 
 
             if (oProducto.IdProducto == 0)
             {
-                int IdProductoGenerado = new CN_Producto().RegistrarProducto(oProducto, out mensaje);
+                int idProductoGenerado = new CN_Producto().RegistrarProducto(oProducto, out mensaje);
 
-                if (IdProductoGenerado != 0)
+                if (idProductoGenerado != 0)
                 {
-                    oProducto.IdProducto = IdProductoGenerado;
+                    oProducto.IdProducto = idProductoGenerado;
                 }
                 else {
-                    operacion_existosa = false;
+                    operacion_exitosa = false;
                 }
-
             }
             else
             {
-                operacion_existosa = new CN_Producto().EditarProducto(oProducto, out mensaje);
+                operacion_exitosa = new CN_Producto().EditarProducto(oProducto, out mensaje);
             }
 
-            if (operacion_existosa)
+            if (operacion_exitosa)
             {
-                if(archivoImagen != null)
+                if (archivoImagen != null)
                 {
                     string ruta_guardar = ConfigurationManager.AppSettings["ServidorFotos"];
                     string extension = Path.GetExtension(archivoImagen.FileName);
-                    string nombre_imagen = string.Concat(oProducto.IdProducto.ToString(),extension);
+                    string nombre_imagen = string.Concat(oProducto.IdProducto.ToString(), extension);
 
-                    try {
 
+                    try
+                    {
                         archivoImagen.SaveAs(Path.Combine(ruta_guardar, nombre_imagen));
-
                     }
                     catch (Exception ex)
                     {
@@ -221,34 +199,35 @@ namespace CapaAdmin.Controllers
                     {
                         oProducto.RutaImagen = ruta_guardar;
                         oProducto.NombreImagen = nombre_imagen;
-
                         bool rspta = new CN_Producto().GuardarDatosImagen(oProducto, out mensaje);
                     }
                     else
                     {
-                        mensaje = "Se guardó el producto, pero hubo problemas al cargar la imagen.";
+                        mensaje = "Se Guardo el producto pero hubo problemas con la imagen";
                     }
 
                 }
             }
-            return Json(new { operacionExitosa = operacion_existosa, igGenerado = oProducto.IdProducto, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+
+            return Json(new { operacionExitosa = operacion_exitosa, idGenerado= oProducto.IdProducto, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public JsonResult ImagenProducto(int id)
         {
             bool conversion;
-            Producto oProducto = new CN_Producto().Listar().Where(p => p.IdProducto == id).FirstOrDefault();
+            Producto oproducto = new CN_Producto().Listar().Where(p => p.IdProducto == id).FirstOrDefault();
 
-            string textoBase64 = CN_Recursos.ConvertirBase64(Path.Combine(oProducto.RutaImagen,oProducto.NombreImagen), out conversion);
+            string textoBase64 = CN_Recursos.ConvertirBase64(Path.Combine(oproducto.RutaImagen, oproducto.NombreImagen), out conversion);
 
             return Json(new
             {
                 conversion = conversion,
                 textoBase64 = textoBase64,
-                extension = Path.GetExtension(oProducto.NombreImagen)
-            },
-            JsonRequestBehavior.AllowGet);
+                extension = Path.GetExtension(oproducto.NombreImagen)
+            }, JsonRequestBehavior.AllowGet);
+
+
         }
 
         [HttpPost]
