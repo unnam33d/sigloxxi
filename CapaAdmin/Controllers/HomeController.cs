@@ -60,5 +60,28 @@ namespace CapaAdmin.Controllers
             return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+
+        [HttpGet]
+        public JsonResult ListaReporte(string fechainicio, string fechafin, string idtransaccion)
+        {
+
+            List<Reporte> oLista = new List<Reporte>();
+
+
+
+            oLista = new CN_Reporte().Ventas(fechainicio, fechafin, idtransaccion);
+
+            return Json(new { resultado = oLista }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpGet]
+        public JsonResult VerDashBoard()
+        {
+            Dashboard objeto = new CN_Reporte().VerDashBoard();
+
+            return Json(new { resultado = objeto }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

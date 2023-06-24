@@ -51,7 +51,7 @@
             </div>
             <div class="modal-body">
 
-                <input id="txtid" type="text" value="0" />
+                <input id="txtid" type="hidden" value="0" />
 
                 <form id="contenedor" class="row">
 
@@ -115,7 +115,7 @@
                     <div class="col-12">
 
                         <div id="mensajeError" class="alert alert-danger" role="alert">
-                            This is a danger alert—check it out!
+
                         </div>
 
                     </div>
@@ -245,7 +245,7 @@ jQuery.ajax({
         });
 
 
-        jQuery.validator.addMthod("preciodecimal", function (values, element) {
+        jQuery.validator.addMethod("preciodecimal", function (value, element) {
             return this.optional(element) || /^\d{0,4}(\.\d{0,2})?$/i.test(value);
         }, "El formato correcto del precio es ##.###");
 
@@ -267,7 +267,7 @@ jQuery.ajax({
             messages: {
                 nombreproducto: "- El campo Nombre es obligatorio",
                 receta: "- El campo Receta es obligatorio",
-                precio: { required: "- El campo Precio es obligatorio", preciodecimal }
+                precio: { required: "- El campo Precio es obligatorio", preciodecimal: "El formato correcto del precio es ##.###"}
             },
             errorElement: "div",
             errorLabelContainer: ".alert-danger"
@@ -280,17 +280,43 @@ jQuery.ajax({
 
             if (json != null) {
 
-                $("#txtid").val(json.IdIngrediente);
+                $("#txtid").val(json.IdProducto);
                 $("#txtnombre").val(json.NombreProducto);
                 $("#txtreceta").val(json.Receta);
                 $("#cmbIngrediente").val(json.oIngrediente.IdIngrediente);
                 $("#cmbCategoria").val(json.oCategoria.IdCategoria);
                 $("#txtprecio").val(json.Precio);
                 $("#cmbActivo").val(json.Activo == true ? 1 : 0);
+                               
+
+                jQuery.ajax({
+                        url: '@Url.Action("ImagenProducto", "Mantenedor")',
+                        type: "POST",
+                        data: JSON.stringify({ id: json.IdProducto}),
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            $("#img_producto").LoadingOverlay("hide");
+                            if (data.conversion) {
+                                
+                                $("#img_producto").attr({ "src": "data:image/" + data.extension + ";base64," + data.textoBase64 });
+
+                            }
+                        },
+                        error: function (error) {
+                            $("#img_producto").LoadingOverlay("hide");
+
+                            $("#mensajeError").show();
+                            $("#mensajeError").text("Error al mostrar la imagen");
+                        },
+                        beforeSend: function () {
+                            $("#img_producto").LoadingOverlay("show");
+                        },
+                    })
+
+                
 
                 $("#mensajeError").hide();
-
-
 
             } else {
 
@@ -324,12 +350,12 @@ jQuery.ajax({
 
         $("#tabla tbody").on("click", '.btn-eliminar', function () {
 
-            ingredienteSeleccionado = $(this).closest("tr");
+            var productoSeleccionado = $(this).closest("tr");
 
-            var data = tablaData.row(ingredienteSeleccionado).data();
+            var data = tablaData.row(productoSeleccionado).data();
 
             swal({
-                title: "¿Desea Eliminar el Ingrediente??",
+                title: "¿Desea Eliminar el Producto??",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: "btn-success",
@@ -340,16 +366,16 @@ jQuery.ajax({
                 function () {
 
                     jQuery.ajax({
-                        url: '@Url.Action("EliminarIngrediente", "Mantenedor")',
+                        url: '@Url.Action("EliminarProducto", "Mantenedor")',
                         type: "POST",
-                        data: JSON.stringify({ id: data.IdIngrediente}),
+                        data: JSON.stringify({ id: data.IdProducto}),
                         dataType: "json",
                         contentType: "application/json; charset=utf-8",
                         success: function (data) {
 
                             if (data.resultado) {
 
-                                tablaData.row(ingredienteSeleccionado).remove().draw();
+                                tablaData.row(productoSeleccionado).remove().draw();
 
                             } else{
                                 swal("No se pudo eliminar", data.mensaje, "error")
@@ -372,6 +398,12 @@ jQuery.ajax({
         })
 
         function Guardar() {
+
+
+            if (!$("#contenedor").valid()) {
+                return;
+            }
+
 
             var ImagenSeleccionada = $("#fileProducto")[0].files[0];
 

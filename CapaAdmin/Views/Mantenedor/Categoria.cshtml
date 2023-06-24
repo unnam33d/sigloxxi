@@ -49,7 +49,7 @@
             </div>
             <div class="modal-body">
 
-                <input id="txtid" type="text" value="0" />
+                <input id="txtid" type="hidden" value="0" />
 
                 <div class="row g-1">
                     <div class="col-sm-6">
@@ -169,7 +169,7 @@
 
         $("#tabla tbody").on("click", '.btn-eliminar', function () {
 
-            categoriaSeleccionada = $(this).closest("tr");
+            var categoriaSeleccionada = $(this).closest("tr");
 
             var data = tablaData.row(categoriaSeleccionada).data();
 
