@@ -12,6 +12,8 @@ using Newtonsoft.Json;
 
 namespace CapaAdmin.Controllers
 {
+
+    [Authorize]
     public class MantenedorController : Controller
     {
         // GET: Mantenedor
@@ -20,10 +22,10 @@ namespace CapaAdmin.Controllers
             return View();
         }
 
-        public ActionResult Ingredientes()
-        {
-            return View();
-        }
+        //public ActionResult Ingredientes()
+        //{
+        //    return View();
+        //}
 
         public ActionResult Productos()
         {
@@ -78,51 +80,51 @@ namespace CapaAdmin.Controllers
         #endregion
 
 
-        #region INGREDIENTES
+        //#region INGREDIENTES
 
-        [HttpGet]
-        public JsonResult ListarIngredientes()
-        {
-            List<Ingredientes> oLista = new List<Ingredientes>();
+        //[HttpGet]
+        //public JsonResult ListarIngredientes()
+        //{
+        //    List<Ingredientes> oLista = new List<Ingredientes>();
 
-            oLista = new CN_Ingredientes().Listar();
+        //    oLista = new CN_Ingredientes().Listar();
 
-            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
-        }
-
-
-        [HttpPost]
-        public JsonResult GuardarIngrediente(Ingredientes objeto)
-        {
-            object resultado;
-            string mensaje = string.Empty;
-
-            if (objeto.IdIngrediente == 0)
-            {
-                resultado = new CN_Ingredientes().RegistrarIngrediente(objeto, out mensaje);
-            }
-            else
-            {
-                resultado = new CN_Ingredientes().EditarIngrediente(objeto, out mensaje);
-            }
-
-            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        //    return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+        //}
 
 
-        }
+        //[HttpPost]
+        //public JsonResult GuardarIngrediente(Ingredientes objeto)
+        //{
+        //    object resultado;
+        //    string mensaje = string.Empty;
 
-        [HttpPost]
-        public JsonResult EliminarIngrediente(int id)
-        {
-            bool respuesta = false;
-            string mensaje = string.Empty;
+        //    if (objeto.IdIngrediente == 0)
+        //    {
+        //        resultado = new CN_Ingredientes().RegistrarIngrediente(objeto, out mensaje);
+        //    }
+        //    else
+        //    {
+        //        resultado = new CN_Ingredientes().EditarIngrediente(objeto, out mensaje);
+        //    }
 
-            respuesta = new CN_Ingredientes().EliminarIngrediente(id, out mensaje);
+        //    return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
 
-            return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
-        }
 
-        #endregion
+        //}
+
+        //[HttpPost]
+        //public JsonResult EliminarIngrediente(int id)
+        //{
+        //    bool respuesta = false;
+        //    string mensaje = string.Empty;
+
+        //    respuesta = new CN_Ingredientes().EliminarIngrediente(id, out mensaje);
+
+        //    return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        //}
+
+        //#endregion
 
 
         #region PRODUCTO

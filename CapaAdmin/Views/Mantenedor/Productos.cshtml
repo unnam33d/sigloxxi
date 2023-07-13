@@ -30,7 +30,7 @@
             <tr>
                 <th>Nombre</th>
                 <th>Receta</th>
-                <th>Ingrediente</th>
+                @*<th>Ingrediente</th>*@
                 <th>Categoria</th>
                 <th>Precio</th>
                 <th>Activo</th>
@@ -77,14 +77,16 @@
                         </div>
                     </div>
 
+                     <div class="col-sm-3">
 
-                    <div class="col-sm-3">
 
-
-                        <div class="mb-3">
+                        @*<div class="mb-3">
                             <label class="form-label">Ingrediente</label>
                             <select id="cmbIngrediente" class="form-select"></select>
-                        </div>
+                        </div>*@
+
+                        
+
 
                         <div class="mb-3">
                             <label class="form-label">Categoria</label>
@@ -97,16 +99,21 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-3">
-                        
-                        <div class="mb-3">
-                            <label for="cmbActivo" class="form-label">Activo</label>
-                            <select id="cmbActivo" class="form-select">
-                                <option value="1">Si</option>
-                                <option value="0">No</option>
-                            </select>
-                        </div>
-                    </div>
+                     <div class="col-sm-3">
+
+                         <div class="mb-3">
+                             <label for="cmbActivo" class="form-label">Activo</label>
+                             <select id="cmbActivo" class="form-select">
+                                 <option value="1">Si</option>
+                                 <option value="0">No</option>
+                             </select>
+                         </div>
+
+                         <div class="mb-3 invisible">
+                             <label class="form-label">Ingrediente</label>
+                             <select id="cmbIngrediente" class="form-select invisible"></select>
+                         </div>
+                     </div>
 
                 </form>
 
@@ -163,11 +170,11 @@
                 { "data": "NombreProducto" },
                 { "data": "Receta" },
 
-                {
-                    "data": "oIngrediente", "render": function (data) {
-                        return data.Descripcion
-                    }
-                },
+                //{
+                //    "data": "oIngrediente", "render": function (data) {
+                //        return data.Descripcion
+                //    }
+                //},
 
                 {
                     "data": "oCategoria", "render": function (data) {
@@ -203,46 +210,46 @@
 
 
         jQuery.ajax({
-    url: '@Url.Action("ListarIngredientes", "Mantenedor")',
-    type: "GET",
-    data: null,
-    dataType: "json",
-    contentType: "application/json; charset=utf-8",
-    success: function (data) {
-        console.log(data);
-        $("<option>").attr({ "value": "0", "disabled": "true", "selected": "true" }).text("Seleccionar Ingrediente").appendTo("#cmbIngrediente");
-        $.each(data.data, function (index, valor) {
-            $("<option>").attr({ "value": valor.IdIngrediente }).text(valor.Descripcion).appendTo("#cmbIngrediente");
+            url: '@Url.Action("ListarIngredientes", "Mantenedor")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                console.log(data);
+                $("<option>").attr({ "value": "0", "disabled": "true", "selected": "true" }).text("Seleccionar Ingrediente").appendTo("#cmbIngrediente");
+                $.each(data.data, function (index, valor) {
+                    $("<option>").attr({ "value": valor.IdIngrediente }).text(valor.Descripcion).appendTo("#cmbIngrediente");
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            },
+            complete: function () {
+                tablaData.ajax.reload();
+            }
         });
-    },
-    error: function (error) {
-        console.log(error);
-    },
-    complete: function () {
-        tablaData.ajax.reload();
-    }
-});
 
-jQuery.ajax({
-    url: '@Url.Action("ListarCategorias", "Mantenedor")',
-    type: "GET",
-    data: null,
-    dataType: "json",
-    contentType: "application/json; charset=utf-8",
-    success: function (data) {
-        console.log(data);
-        $("<option>").attr({ "value": "0", "disabled": "true", "selected": "true" }).text("Seleccionar Categoría").appendTo("#cmbCategoria");
-        $.each(data.data, function (index, item) {
-            $("<option>").attr({ "value": item.IdCategoria }).text(item.Descripcion).appendTo("#cmbCategoria");
-        });
-    },
-    error: function (error) {
-        console.log(error);
-    },
-    complete: function () {
-        tablaData.ajax.reload();
-    }
-        });
+        jQuery.ajax({
+            url: '@Url.Action("ListarCategorias", "Mantenedor")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                console.log(data);
+                $("<option>").attr({ "value": "0", "disabled": "true", "selected": "true" }).text("Seleccionar Categoría").appendTo("#cmbCategoria");
+                $.each(data.data, function (index, item) {
+                    $("<option>").attr({ "value": item.IdCategoria }).text(item.Descripcion).appendTo("#cmbCategoria");
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            },
+            complete: function () {
+                tablaData.ajax.reload();
+            }
+                });
 
 
         jQuery.validator.addMethod("preciodecimal", function (value, element) {
@@ -261,13 +268,13 @@ jQuery.ajax({
                 },
                 precio: {
                     required: true,
-                    preciodecimal: true
+                    //preciodecimal: true
                 }
             },
             messages: {
                 nombreproducto: "- El campo Nombre es obligatorio",
                 receta: "- El campo Receta es obligatorio",
-                precio: { required: "- El campo Precio es obligatorio", preciodecimal: "El formato correcto del precio es ##.###"}
+                //precio: { required: "- El campo Precio es obligatorio", preciodecimal: "El formato correcto del precio es ##.###"}
             },
             errorElement: "div",
             errorLabelContainer: ".alert-danger"
@@ -287,6 +294,11 @@ jQuery.ajax({
                 $("#cmbCategoria").val(json.oCategoria.IdCategoria);
                 $("#txtprecio").val(json.Precio);
                 $("#cmbActivo").val(json.Activo == true ? 1 : 0);
+
+
+                
+                
+
                                
 
                 jQuery.ajax({
@@ -325,7 +337,7 @@ jQuery.ajax({
                 $("#fileProducto").val("");
                 $("#txtnombre").val("");
                 $("#txtreceta").val("");
-                $("#cmbIngrediente").val("0");
+                $("#cmbIngrediente").val("9");
                 $("#cmbCategoria").val("0");
                 $("#txtprecio").val("");
                 $("#cmbActivo").val(1);

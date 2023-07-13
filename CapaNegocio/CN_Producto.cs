@@ -32,7 +32,7 @@ namespace CapaNegocio
                 Mensaje = "Ingresa una receta al producto";
             }
 
-            else if(obj.oIngrediente.IdIngrediente == 0)
+            else if (obj.oIngrediente.IdIngrediente == 0)
             {
                 Mensaje = "Ingresa un ingrediente al producto";
             }
