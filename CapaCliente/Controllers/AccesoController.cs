@@ -181,7 +181,7 @@ namespace CapaCliente.Controllers
 
             Session["Cliente"] = null;
             FormsAuthentication.SignOut();
-            return RedirectToAction("Index", "Acceso");
+            return RedirectToAction("Index", "Tienda");
         }
 
 
