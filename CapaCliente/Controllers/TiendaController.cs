@@ -82,7 +82,45 @@ namespace CapaCliente.Controllers
         }
 
 
+        [HttpPost]
+        public JsonResult AgregarPedido(int idproducto) {
 
+            int idcliente = ((Cliente)Session["Cliente"]).IdCliente;
+
+            bool existe = new CN_Pedido().ExistePedido(idcliente, idproducto);
+
+            bool respuesta = false;
+
+            string mensaje = string.Empty;
+
+            if (existe)
+            {
+
+                respuesta = new CN_Pedido().OperacionPedido(idcliente, idproducto, true, out mensaje);
+
+
+            }
+            else {
+
+                respuesta = new CN_Pedido().OperacionPedido(idcliente, idproducto, true, out mensaje);
+
+
+
+            }
+
+            return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpGet]
+        public JsonResult CantidadEnPedido() {
+
+            int idcliente = ((Cliente)Session["Cliente"]).IdCliente;
+            int cantidad = new CN_Pedido().CantidadEnPedido(idcliente);
+            return Json(new {cantidad = cantidad}, JsonRequestBehavior.AllowGet);
+
+
+        }
 
 
     }
