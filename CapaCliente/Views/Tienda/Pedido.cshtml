@@ -78,28 +78,21 @@
                     </div>
 
                     <div class="d-flex justify-content-end">
-                        <div>
+                            <label class="align-self-center">
+                                <b>Total: $<span id="total">0</span></b>
+                            </label>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
                             <label class="align-self-center">
                                 <b>Propina: $ <span id="propina"> 000 </span></b>
                             </label>
-                        </div>
                     </div>
 
                     <div class="d-flex justify-content-end">
-
-                        <div>
-                            <label class="align-self-center">
-                                <b>Total: $ <span id="total"></span></b>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-end">
-                        <div>
                             <label class="align-self-center">
                                 <b>Total + Propina: $ <span id="totalFinal"> 000 </span></b>
                             </label>
-                        </div>
                     </div>
 
                     <hr class="mt-2 mb-2" />
@@ -131,7 +124,7 @@
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
 
-                    //$("#productos-pedido").html("");
+                    $("#productos-pedido").html("");
                     $("#productos-pedido").LoadingOverlay("hide");
 
 
@@ -164,7 +157,9 @@
                                             ),
 
                                             $("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").attr({ "disabled": "disabled" })
-                                                .css({ "width": "40px" }).data("oProducto", item.oProducto).val(item.Cantidad),
+                                                .css({ "width": "40px" })
+                                                .data("oProducto", item.oProducto)
+                                                .val(item.Cantidad),
 
                                             $("<button>").addClass("btn btn-outline-secondary btn-sumar rounded-0").append(
                                                 $("<i>").addClass("fas fa-plus")
@@ -175,13 +170,21 @@
                                     $("<div>").addClass("col-sm-2 align-self-center").append(
                                         $("<button>").addClass("btn btn-outline-danger btn-eliminar").append(
                                             $("<i>").addClass("far fa-trash-alt"), " Eliminar"
-                                        )
-                                    ),
+                                        ).data("idproducto", item.oProducto.IdProducto),
+                                    )
                                 )
                             )
                         ).appendTo("#productos-pedido")
                     })
                     sumarTotal();
+                    sumarPropina();
+                    sumarTotalPropina();
+                },
+                error: function (error) {
+                    $("#productos-pedido").LoadingOverlay("hide");
+                },
+                beforeSend: function () {
+                    $("#productos-pedido").LoadingOverlay("show");
                 }
             })
 
@@ -189,26 +192,24 @@
 
         })
         
-        //function sumarTotal() {
-
-        //    var sumaTotal = parseFloat(0)
-
-        //    $("input.input-cantidad").each(function (i) {
-
-        //        var precio = $(this).data("oProducto").PrecioTexto;
-        //        var cantidad = parseFloat($(this).val());
-
-        //        var subtotal = precio * cantidad;
-
-        //        sumarTotal += subtotal;
-        //    })
-
-        //    $("#total").text(sumaTotal.toFixed(0))
-        //    $("#total").data("sumatotal", sumaTotal)
-
-        //}
-
         function sumarTotal() {
+
+            var sumaTotal = parseFloat(0)
+
+            $("input.input-cantidad").each(function (i) {
+                var precio = $(this).data("oProducto").Precio;
+                var cantidad = parseFloat($(this).val())
+
+                var subtotal = precio * cantidad;
+
+                sumaTotal += subtotal;
+            });
+
+            $("#total").text(sumaTotal)
+            $("#total").data("sumatotal", sumaTotal)
+        }
+        
+        function sumarPropina() {
             var sumaTotal = parseFloat(0);
 
             $("input.input-cantidad").each(function (i) {
@@ -219,8 +220,215 @@
                 sumaTotal += subtotal;
             });
 
-            $("#total").text(sumaTotal.toFixed(0));
-            $("#total").data("sumatotal", sumaTotal);
+            var propina = Math.round(sumaTotal * 0.10);
+
+            $("#propina").text(propina)
+        }
+
+        function sumarTotalPropina() {
+            var sumaTotal = parseFloat(0);
+
+            $("input.input-cantidad").each(function (i) {
+                var precio = $(this).data("oProducto").Precio;
+                var cantidad = parseFloat($(this).val());
+                var subtotal = precio * cantidad;
+
+                sumaTotal += subtotal;
+            });
+
+            var propina = Math.round(sumaTotal * 0.19);
+            var totalTotal = sumaTotal+propina
+
+            $("#totalFinal").text(totalTotal)
+            $("#totalFinal").data("sumatotal2", totalTotal)
+        }
+
+        $(document).on("click", ".btn-sumar", function () {
+
+            var div_contenedor = $(this).parent("div.d-flex");
+
+            var input_cantidad = $(div_contenedor).find("input.input-cantidad");
+
+            var btn = $(this)
+
+            var idproducto = $(input_cantidad).data("oProducto").IdProducto;
+
+
+            jQuery.ajax({
+
+                url: '@Url.Action("OperacionPedido", "Tienda")',
+                type: "POST",
+                data: JSON.stringify({ idproducto: idproducto , sumar: true }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    $(btn).LoadingOverlay("hide")
+
+                    if (data.respuesta) {
+                        var cantidad = parseInt($(input_cantidad).val()) + 1;
+                        $(input_cantidad).val(cantidad)
+                        sumarTotal();
+                        sumarPropina();
+                        sumarTotalPropina();
+                    } else {
+                        swal("", data.mensaje, "warning")
+                    }
+                },
+                error: function (error) {
+                    $(btn).LoadingOverlay("hide")
+                },
+                beforeSend: function () {
+                    $(btn).LoadingOverlay("show")
+                }
+            })
+        })
+
+        $(document).on("click", ".btn-restar", function () {
+
+            var div_contenedor = $(this).parent("div.d-flex");
+
+            var input_cantidad = $(div_contenedor).find("input.input-cantidad");
+
+            var btn = $(this)
+
+            var idproducto = $(input_cantidad).data("oProducto").IdProducto;
+
+            var cantidad = parseInt($(input_cantidad).val()) - 1;
+
+            if (cantidad >= 1) {
+                jQuery.ajax({
+
+                url: '@Url.Action("OperacionPedido", "Tienda")',
+                type: "POST",
+                data: JSON.stringify({ idproducto: idproducto , sumar: false }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    $(btn).LoadingOverlay("hide")
+
+                    if (data.respuesta) {
+                        
+                        $(input_cantidad).val(cantidad)
+                        sumarTotal();
+                        sumarPropina();
+                        sumarTotalPropina();
+                    } else {
+                        swal("", data.mensaje, "warning")
+                    }
+
+                },
+                error: function (error) {
+                    $(btn).LoadingOverlay("hide")
+                },
+                beforeSend: function () {
+                    $(btn).LoadingOverlay("show")
+                }
+
+            })
+          }
+        })
+
+
+        
+        $(document).on("click", ".btn-eliminar", function () {
+
+            var idproducto = $(this).data("idproducto");
+
+            var card_producto = $(this).parents("div.card-producto");
+
+                jQuery.ajax({
+
+                url: '@Url.Action("EliminarPedido", "Tienda")',
+                type: "POST",
+                data: JSON.stringify({ idproducto: idproducto }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    
+                    if (data.respuesta) {
+                        
+                        card_producto.remove();
+                        MostrarCantidadPedido();
+
+                        sumarTotalPropina();
+                        sumarPropina();
+                        sumarTotal();
+
+
+                    } else {
+                        swal("", data.mensaje, "warning")
+                    }
+
+                }
+
+            })
+        })
+
+        function RealizarPago() {
+
+            
+
+            if (parseInt($("#cantidadcarrito").text()) == 0) {
+
+                swal("", "No Existen Productos en el Pedido", "warning")
+            }
+
+            var venta = {
+
+
+
+                TotalProducto: $("input.input-cantidad").length,
+                MontoTotal: 0
+                //Contacto: 
+            }
+
+            var lista_pedido = [];
+
+            $("input.input-cantidad").each(function (i) {
+
+                var producto = $(this).data("oProducto");
+                var cantidad = parseFloat($(this).val())
+
+                lista_pedido.push({
+
+                    oProducto: producto,
+                    Cantidad: cantidad
+
+                })
+
+                jQuery.ajax({
+
+                url: '@Url.Action("ProcesarPago", "Tienda")',
+                type: "POST",
+                data: JSON.stringify({ oListaPedido: lista_pedido , oVenta: venta }),
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    $.LoadingOverlay("hide")
+
+                    if (data.Status) {
+                        
+                        window.location.href = data.Link;
+                    } else {
+                        swal("", "El pago no se ha podido procesar, contactese con algún trabajador del local", "warning")
+                    }
+
+                },
+                error: function (error) {
+                    $.LoadingOverlay("hide")
+                },
+                beforeSend: function () {
+                    $.LoadingOverlay("show")
+                }
+
+            })
+
+
+            })
+
         }
 
         
