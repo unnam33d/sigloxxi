@@ -26,8 +26,6 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("IdCliente", obj.IdCliente);
                     cmd.Parameters.AddWithValue("TotalProducto", obj.TotalProducto);
                     cmd.Parameters.AddWithValue("MontoTotal", obj.MontoTotal);
-                    cmd.Parameters.AddWithValue("Contacto", obj.Contacto);
-                    cmd.Parameters.AddWithValue("IdMesa", 12);
                     cmd.Parameters.AddWithValue("IdTransaccion", obj.IdTransaccion);
                     cmd.Parameters.AddWithValue("DetalleVenta", DetalleVenta);
                     cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;

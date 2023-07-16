@@ -9,16 +9,10 @@ namespace CapaEntidad
     public class Venta
     {
         public int IdVenta { get; set; }
-        public Cliente oCliente { get; set; }
         public int IdCliente { get; set; }
         public int TotalProducto { get; set; }
         public decimal MontoTotal { get; set; }
         public string IdTransaccion { get; set; }
-        public string Contacto { get; set; }        
-        public Usuario oUsuario { get; set; }
-        public Pedidos oPedido { get; set; }
-        public bool ValidacionPago { get; set; }
-        public DateTime FechaVenta { get; set; }
 
     }
 }

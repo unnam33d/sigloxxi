@@ -230,8 +230,6 @@ namespace CapaCliente.Controllers
             if (status) {
                 Venta oVenta = (Venta)TempData["Venta"];
 
-                oVenta.Contacto = "...";
-
                 DataTable detalle_venta = (DataTable)TempData["DetalleVenta"];
 
                 oVenta.IdTransaccion = idtransaccion;
