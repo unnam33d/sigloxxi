@@ -31,7 +31,16 @@ namespace CapaNegocio
 
         }
 
+        public List<Pedidos> ListarProducto(int idcliente) {
 
+            return objCapaDato.ListarProducto(idcliente);
+
+        }
+
+        public bool EliminarPedido(int idcliente, int idproducto) {
+
+            return objCapaDato.EliminarPedido(idcliente, idproducto);
+        }
 
     }
 }

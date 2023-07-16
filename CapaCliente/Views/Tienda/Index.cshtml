@@ -108,17 +108,17 @@
 
 @section scripts {
     
-    <script>
+<script>
 
         $(document).ready(function (){
 
             MostrarCategorias();
             MostrarProductos(0);
-            
+
         })
 
         function MostrarCategorias(){
-        
+
             jQuery.ajax({
 
                 url: "@Url.Action("ListaCategorias", "Tienda")",
@@ -156,7 +156,7 @@
                     $("#contenedor_categoria").LoadingOverlay("show");
                 }
 
-            })        
+            })
         }
 
         //$(document.on("change", "input[name=categoria]", function () {
@@ -166,7 +166,7 @@
 
 
         @*function MostrarProductos(_idcategoria){
-        
+
             jQuery.ajax({
 
                 url: "@Url.Action("ListarProducto", "Tienda")",
@@ -179,7 +179,7 @@
                     $("#contenedor_producto").html("");
                     $("#contenedor_producto").LoadingOverlay("hide");
 
-                                   
+
 
                     $.each(response.data, function (i, element) {
 
@@ -200,11 +200,11 @@
                                         }
                                         $("<a>").addClass("btn btn-dark mt-auto")
                                             .attr({ "href": "@Url.Action("DetalleProducto", "Tienda")" + "?idproducto=" + element.IdProducto })
-                                            .text("Ver Detalle")                                        
+                                            .text("Ver Detalle")
                                     )
                                 )
 
-                                
+
 
                         ).appendTo("#contenedor_producto")
 
@@ -215,7 +215,7 @@
                     $("#contenedor_producto").LoadingOverlay("show");
                 }
 
-            })        
+            })
         }*@
 
         function MostrarProductos(_idcategoria) {
@@ -239,23 +239,53 @@
                                     "src": "data:image/" + element.Extension + ";base64," + element.Base64
                                 }),
                                 $("<div>").addClass("card-body p-2").append(
-                                    
+
                                 ),
                                 $("<div>").addClass("text-center").append(
                                     $("<h5>").addClass("fw-bolder").text(element.NombreProducto),
                                     "$ " + element.Precio.toFixed(0) + " CLP"
                                 ),
 
-                                $("<div>").addClass("card-footer p-2 pt-0 border-top-0 bg-transparent").append(
+                                @*$("<div>").addClass("card-footer p-2 pt-0 border-top-0 bg-transparent").append(
                                     @if (Session["Cliente"] != null) {
-                                        @:$("<button>").addClass("btn btn-success mt-auto agregarpedido").data("idproducto", element.IdProducto).text("Agregar al Pedido"),
+                                        @:$("<button>").addClass("btn btn-success mt-auto agregarpedido").css({"font-size": "17px", "padding": "7px 73px"}).data("idproducto", element.IdProducto).text("Agregar al Pedido"),
                                     }
-                                    $("<a>").addClass("btn btn-dark mt-auto d-flex justify-content-center") // Agregamos las clases CSS para centrar
+                                    $("<a>").addClass("btn btn-dark mt-auto d-flex justify-content-center")
                                     .attr({
                                         "href": "@Url.Action("DetalleProducto", "Tienda")" + "?idproducto=" + element.IdProducto
                                     })
                                     .text("Ver Detalle")
+                                )*@
+
+                                @*$("<div>").addClass("card-footer p-2 pt-0 border-top-0 bg-transparent").append(
+                                @if (Session["Cliente"] != null) {
+                                @:$("<button>").addClass("btn btn-success mt-auto d-flex justify-content-center agregarpedido").css({"font-size": "17px", "padding": "7px 73px"}).data("idproducto", element.IdProducto).text("Agregar al Pedido"),
+                                 }
+                                 $("<a>").addClass("btn btn-dark mt-auto d-flex justify-content-center").css({"font-size": "17px", "padding": "7px 73px"})
+                                 .attr({
+                                     "href": "@Url.Action("DetalleProducto", "Tienda")" + "?idproducto=" + element.IdProducto
+                                 })
+                                 .text("Ver Detalle")
+
+                                 )*@
+
+                                $("<div>").addClass("card-footer p-2 pt-0 border-top-0 bg-transparent").append(
+                                  @if (Session["Cliente"] != null) {
+                                    @:$("<button>").addClass("btn btn-success mt-auto agregarpedido").css({"font-size": "17px", "padding": "0", "width": "100%", "height": "70%"}).data("idproducto", element.IdProducto).text("Agregar al Pedido"),
+                                  }
+                                  $("<a>").addClass("btn btn-dark mt-auto d-flex justify-content-center").css({"font-size": "17px", "padding": "10px 20px"})
+                                    .attr({
+                                      "href": "@Url.Action("DetalleProducto", "Tienda")" + "?idproducto=" + element.IdProducto
+                                    })
+                                    .text("Ver Detalle")
                                 )
+
+
+
+
+
+
+
                             )
                         ).appendTo("#contenedor_producto")
 
@@ -301,7 +331,7 @@
                                 confirmButtonText: "Si",
                                 cancelButtonText: "No",
                                 closeOnConfirm: true
-                                
+
 
                             }, function () {
 
@@ -321,7 +351,7 @@
                 })
         })
 
-    </script>
+</script>
 
     }
 

@@ -96,7 +96,7 @@ namespace CapaCliente.Controllers
             if (existe)
             {
 
-                respuesta = new CN_Pedido().OperacionPedido(idcliente, idproducto, true, out mensaje);
+                mensaje = "El producto ya está en el carrito, si desea agregar uno igual aumente su cantidad dentro del carrito";
 
 
             }
@@ -118,8 +118,69 @@ namespace CapaCliente.Controllers
             int idcliente = ((Cliente)Session["Cliente"]).IdCliente;
             int cantidad = new CN_Pedido().CantidadEnPedido(idcliente);
             return Json(new {cantidad = cantidad}, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult ListarProductosPedido() {
+
+            int idcliente = ((Cliente)Session["Cliente"]).IdCliente;
+
+            List<Pedidos> oLista = new List<Pedidos>();
+
+            bool conversion;
+
+            oLista = new CN_Pedido().ListarProducto(idcliente).Select(oc => new Pedidos()
+            {
+
+                oProducto = new Producto()
+                {
+                    IdProducto = oc.oProducto.IdProducto,
+                    NombreProducto = oc.oProducto.NombreProducto,
+                    oCategoria = oc.oProducto.oCategoria,
+                    Precio = oc.oProducto.Precio,
+                    RutaImagen = oc.oProducto.RutaImagen,
+                    Base64 = CN_Recursos.ConvertirBase64(Path.Combine(oc.oProducto.RutaImagen, oc.oProducto.NombreImagen), out conversion),
+                    Extension = Path.GetExtension(oc.oProducto.NombreImagen)
+                },
+
+                    Cantidad = oc.Cantidad
+
+            }).ToList();
+
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult OperacionPedido(int idproducto, bool sumar)
+        {
+
+            int idcliente = ((Cliente)Session["Cliente"]).IdCliente;
 
 
+            bool respuesta = false;
+
+            string mensaje = string.Empty;
+
+            respuesta = new CN_Pedido().OperacionPedido(idcliente, idproducto, true, out mensaje);
+
+            return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpPost]
+        public JsonResult EliminarPedido(int idproducto) {
+
+            int idcliente = ((Cliente)Session["Cliente"]).IdCliente;
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new CN_Pedido().EliminarPedido(idcliente, idproducto);
+
+            return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Pedido() {
+            return View();
         }
 
 
